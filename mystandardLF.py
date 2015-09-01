@@ -22,7 +22,8 @@ globalstop=0
 finished=False
 fast=15
 turnspeed=30
-slow=15
+turnspeed2=15
+slow=10
 
 #use pwm on inputs so motors don't go too fast
 GPIO.setup(19, GPIO.OUT)
@@ -44,12 +45,27 @@ def stopAll():
        p.ChangeDutyCycle(0)
        q.ChangeDutyCycle(0)
 
+def turnAround():
+       while GPIO.input(middle)==0:
+              p.ChangeDutyCycle(0)
+              q.ChangeDutyCycle(17)
+              a.ChangeDutyCycle(turnspeed2)
+              b.ChangeDutyCycle(0)
+       
+       
+              
+       
+##       stopAll()
+       print ('turn around')
+       
 def sharpRight():
        p.ChangeDutyCycle(0)
-       q.ChangeDutyCycle(slow)
+       q.ChangeDutyCycle(turnspeed2)
        a.ChangeDutyCycle(turnspeed)
        b.ChangeDutyCycle(0)
-       time.sleep(.28)
+       time.sleep(.4)
+##       stopAll()
+       print ('sharp right')
 ##       if GPIO.input(22)==1 and GPIO.input(7)==0 and GPIO.input(12)==0:
 ##           stopAll()
 
@@ -57,8 +73,8 @@ def sharpLeft():
        p.ChangeDutyCycle(turnspeed)
        q.ChangeDutyCycle(0)
        a.ChangeDutyCycle(0)
-       b.ChangeDutyCycle(slow)
-       time.sleep(.28)
+       b.ChangeDutyCycle(turnspeed2)
+       time.sleep(.4)
        
 def followLine():
        if GPIO.input(right)==0 and GPIO.input(left)==0:
@@ -80,12 +96,15 @@ def followLine():
             b.ChangeDutyCycle(slow)
 
 
+
+
 def fwd():
-       p.ChangeDutyCycle(fast)
+       p.ChangeDutyCycle(slow)
        q.ChangeDutyCycle(0)
-       a.ChangeDutyCycle(fast)
+       a.ChangeDutyCycle(slow)
        b.ChangeDutyCycle(0)
        time.sleep(.2)
+       print ('fwd')
 
 def reverse():
        p.ChangeDutyCycle(0)
@@ -101,22 +120,31 @@ try:
 #                  if GPIO.input(12)==1 and GPIO.input(13)==1 or globalstop==1:
              
               if GPIO.input(farright)==0 and GPIO.input(farleft)==0:
-              #follow a straight line
-                     followLine()
-              elif GPIO.input(farright) ==1 and GPIO.input(right) == 1 and GPIO.input(middle)==1:
+                     if GPIO.input(right)==0 and GPIO.input(left)==0 and GPIO.input(middle)==0:
+                     #turn around
+                            turnAround()
+                     elif GPIO.input(middle)==1:
+                     #follow a straight line
+                            followLine()
+              
+              elif (GPIO.input(farright) ==1 and GPIO.input(right) == 1 and GPIO.input(middle)==1):
               #turn right
                      sharpRight()
-              elif GPIO.input(middle)==1 and GPIO.input(left)==1 and GPIO.input(right)==1:
-                     sharpRight()
+                     
+##              elif GPIO.input(middle)==1 and GPIO.input(left)==1 and GPIO.input(right)==1:
+##              #turn right
+##                     sharpRight()
               elif GPIO.input(farleft)==1:
                      fwd()
                      if GPIO.input(middle)==1:
                             followLine()
+                            print ('go')
                      else:
                             reverse()
                             sharpLeft()
-              elif GPIO.input(middle)==0 and GPIO.input(left)==0 and GPIO.input(right)==0:
-                     stopAll()
+                            print ('redirect')
+##              elif GPIO.input(middle)==0 and GPIO.input(left)==0 and GPIO.input(right)==0:
+##                     turnAround()
               #go straight, not left
 
                      
