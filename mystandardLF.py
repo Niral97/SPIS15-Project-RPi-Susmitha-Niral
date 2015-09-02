@@ -20,7 +20,7 @@ farleft = 12
 #Define global variables
 globalstop=0
 finished=False
-fast=15
+fast=18
 turnspeed=30
 turnspeed2=15
 slow=10
@@ -47,34 +47,24 @@ def stopAll():
 
 def turnAround():
        while GPIO.input(middle)==0:
-              p.ChangeDutyCycle(0)
-              q.ChangeDutyCycle(17)
-              a.ChangeDutyCycle(turnspeed2)
-              b.ChangeDutyCycle(0)
+              p.ChangeDutyCycle(10)
+              q.ChangeDutyCycle(0)
+              a.ChangeDutyCycle(0)
+              b.ChangeDutyCycle(13)
        
-       
-              
-       
-##       stopAll()
        print ('turn around')
        
 def sharpRight():
        p.ChangeDutyCycle(0)
-       q.ChangeDutyCycle(turnspeed2)
-       a.ChangeDutyCycle(turnspeed)
+       q.ChangeDutyCycle(10)
+       a.ChangeDutyCycle(25)
        b.ChangeDutyCycle(0)
-       time.sleep(.4)
+       time.sleep(.2)
 ##       stopAll()
        print ('sharp right')
 ##       if GPIO.input(22)==1 and GPIO.input(7)==0 and GPIO.input(12)==0:
 ##           stopAll()
 
-def sharpLeft():
-       p.ChangeDutyCycle(turnspeed)
-       q.ChangeDutyCycle(0)
-       a.ChangeDutyCycle(0)
-       b.ChangeDutyCycle(turnspeed2)
-       time.sleep(.4)
        
 def followLine():
        if GPIO.input(right)==0 and GPIO.input(left)==0:
@@ -99,53 +89,46 @@ def followLine():
 
 
 def fwd():
-       p.ChangeDutyCycle(slow)
+       p.ChangeDutyCycle(fast)
        q.ChangeDutyCycle(0)
-       a.ChangeDutyCycle(slow)
+       a.ChangeDutyCycle(fast)
        b.ChangeDutyCycle(0)
        time.sleep(.2)
-       print ('fwd')
-
-def reverse():
-       p.ChangeDutyCycle(0)
-       q.ChangeDutyCycle(slow)
-       a.ChangeDutyCycle(0)
-       b.ChangeDutyCycle(slow)
-       time.sleep(.2)
-
-
-
+       
+       
 try:
        while True:
 #                  if GPIO.input(12)==1 and GPIO.input(13)==1 or globalstop==1:
              
               if GPIO.input(farright)==0 and GPIO.input(farleft)==0:
-                     if GPIO.input(right)==0 and GPIO.input(left)==0 and GPIO.input(middle)==0:
-                     #turn around
-                            turnAround()
-                     elif GPIO.input(middle)==1:
+                     if GPIO.input(middle)==1:
                      #follow a straight line
                             followLine()
               
-              elif (GPIO.input(farright) ==1 and GPIO.input(right) == 1 and GPIO.input(middle)==1):
-              #turn right
+                     elif GPIO.input(right)==0 and GPIO.input(left)==0 and GPIO.input(middle)==0:
+                     #turn around
+                            turnAround()
+                            
+              elif GPIO.input(farright)==0 and GPIO.input(farleft)==1:
+                     fwd()
+                     print('fwd')
+
+              elif GPIO.input(farright)==0 and GPIO.input(right)==0 and GPIO.input(left)==1 and GPIO.input(farleft)==1:
+                     fwd()
+                     print('fwd')
+
+              elif (GPIO.input(right)==1 and GPIO.input(middle)==1) or (GPIO.input(left)==1 and GPIO.input(middle)==1):
+                     followLine()
+                     
+              elif GPIO.input(farright)==1 or (GPIO.input(right)==1 and GPIO.input(left)==0):
+                     #turn right
                      sharpRight()
                      
-##              elif GPIO.input(middle)==1 and GPIO.input(left)==1 and GPIO.input(right)==1:
-##              #turn right
-##                     sharpRight()
-              elif GPIO.input(farleft)==1:
-                     fwd()
-                     if GPIO.input(middle)==1:
-                            followLine()
-                            print ('go')
-                     else:
-                            reverse()
-                            sharpLeft()
-                            print ('redirect')
-##              elif GPIO.input(middle)==0 and GPIO.input(left)==0 and GPIO.input(right)==0:
-##                     turnAround()
-              #go straight, not left
+             
+                                  
+                     
+
+
 
                      
 except KeyboardInterrupt:
