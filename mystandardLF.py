@@ -53,12 +53,7 @@ def turnAround():
        a.ChangeDutyCycle(0)
        b.ChangeDutyCycle(13)
        print ('turn around')
-def fwdTo():
-       p.ChangeDutyCycle(fast)
-       q.ChangeDutyCycle(0)
-       a.ChangeDutyCycle(fast)
-       b.ChangeDutyCycle(0)
-       time.sleep(.2)
+
        
 def sharpRight():
        p.ChangeDutyCycle(0)
@@ -92,9 +87,9 @@ def followLine():
               b.ChangeDutyCycle(slow)
 
 def fwd():
-       p.ChangeDutyCycle(fast)
+       p.ChangeDutyCycle(15)
        q.ChangeDutyCycle(0)
-       a.ChangeDutyCycle(fast)
+       a.ChangeDutyCycle(15)
        b.ChangeDutyCycle(0)
        #time.sleep(.3)
 
@@ -120,11 +115,15 @@ try:
               
               elif GPIO.input(left)==1 and GPIO.input(middle)==1:
                      #while GPIO.input(farright)==0 and GPIO.input(farleft)==1:
-                     if GPIO.input(right)==1:
-                            sharpRight()
-                     else:
+                     if GPIO.input(right)==0:
                             fwd()
                             print('fwd')
+                     else:
+                            sharpRight()
+
+              elif GPIO.input(left)==1 and GPIO.input(right)==1 and GPIO.input(middle)==0:
+                     stopAll()
+                            
 
      
                             
