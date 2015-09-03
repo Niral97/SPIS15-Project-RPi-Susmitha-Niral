@@ -1,4 +1,5 @@
 
+
 import RPi.GPIO as GPIO, sys, threading, time
 
 #use physical pin numbering
@@ -60,7 +61,7 @@ def sharpRight():
        q.ChangeDutyCycle(10)
        a.ChangeDutyCycle(25)
        b.ChangeDutyCycle(0)
-#       time.sleep(.3)
+       time.sleep(.27)
 ##       stopAll()
        print ('sharp right')
 ##       if GPIO.input(22)==1 and GPIO.input(7)==0 and GPIO.input(12)==0:
@@ -87,9 +88,9 @@ def followLine():
               b.ChangeDutyCycle(slow)
 
 def fwd():
-       p.ChangeDutyCycle(15)
+       p.ChangeDutyCycle(10)
        q.ChangeDutyCycle(0)
-       a.ChangeDutyCycle(15)
+       a.ChangeDutyCycle(10)
        b.ChangeDutyCycle(0)
        #time.sleep(.3)
 
@@ -105,7 +106,7 @@ try:
               #elif GPIO.input(right)==1 and GPIO.input(middle)==1:
               #       followLine()
                      
-              elif GPIO.input(farright)==1:
+              elif GPIO.input(farright)==1:# and GPIO.input(right)==1:
               #turn right
                      sharpRight()
               
@@ -113,17 +114,20 @@ try:
                      turnAround()
 
               
-              elif GPIO.input(left)==1 and GPIO.input(middle)==1:
-                     #while GPIO.input(farright)==0 and GPIO.input(farleft)==1:
-                     if GPIO.input(right)==0:
-                            fwd()
-                            print('fwd')
-                     else:
-                            sharpRight()
+              elif GPIO.input(left)==1 and GPIO.input(middle)==1:#and GPIO.input(farright)==0:
+                     while GPIO.input(farright)==0 and GPIO.input(farleft)==1:
+                            if GPIO.input(right)==1:
+                                   sharpRight()
 
-              elif GPIO.input(left)==1 and GPIO.input(right)==1 and GPIO.input(middle)==0:
-                     stopAll()
                             
+                            else:
+                                   fwd()
+                                   print('fwd')
+
+              #elif (GPIO.input(left)==1 and GPIO.input(right)==1 and GPIO.input(middle)==0) or (GPIO.input(left)==0 and GPIO.input(middle)==1 and GPIO.input(farleft)==1):
+              #       stopAll()
+
+           
 
      
                             
