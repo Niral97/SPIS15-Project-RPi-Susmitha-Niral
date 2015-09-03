@@ -1,3 +1,4 @@
+
 import RPi.GPIO as GPIO, sys, threading, time
 
 #use physical pin numbering
@@ -59,7 +60,7 @@ def sharpRight():
        q.ChangeDutyCycle(10)
        a.ChangeDutyCycle(25)
        b.ChangeDutyCycle(0)
-       time.sleep(.2)
+       time.sleep(.27)
 ##       stopAll()
        print ('sharp right')
 ##       if GPIO.input(22)==1 and GPIO.input(7)==0 and GPIO.input(12)==0:
@@ -93,7 +94,7 @@ def fwd():
        q.ChangeDutyCycle(0)
        a.ChangeDutyCycle(fast)
        b.ChangeDutyCycle(0)
-       time.sleep(.2)
+#       time.sleep(.05)
        
        
 try:
@@ -108,22 +109,20 @@ try:
                      elif GPIO.input(right)==0 and GPIO.input(left)==0 and GPIO.input(middle)==0:
                      #turn around
                             turnAround()
+
+	      elif GPIO.input(farright)==1 and GPIO.input(right)==1:
+                     #turn right
+                     sharpRight()
                             
-              elif GPIO.input(farright)==0 and GPIO.input(farleft)==1:
+              elif GPIO.input(farleft)==1 and GPIO.input(farright)==0:
                      fwd()
                      print('fwd')
-
-              elif GPIO.input(farright)==0 and GPIO.input(right)==0 and GPIO.input(left)==1 and GPIO.input(farleft)==1:
-                     fwd()
-                     print('fwd')
-
+	      
+              
               elif (GPIO.input(right)==1 and GPIO.input(middle)==1) or (GPIO.input(left)==1 and GPIO.input(middle)==1):
                      followLine()
                      
-              elif GPIO.input(farright)==1 or (GPIO.input(right)==1 and GPIO.input(left)==0):
-                     #turn right
-                     sharpRight()
-                     
+             
              
                                   
                      
