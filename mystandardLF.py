@@ -47,89 +47,94 @@ def stopAll():
        q.ChangeDutyCycle(0)
 
 def turnAround():
-       while GPIO.input(middle)==0:
-              p.ChangeDutyCycle(10)
-              q.ChangeDutyCycle(0)
-              a.ChangeDutyCycle(0)
-              b.ChangeDutyCycle(13)
-       
+       #while GPIO.input(middle)==0:
+       p.ChangeDutyCycle(10)
+       q.ChangeDutyCycle(0)
+       a.ChangeDutyCycle(0)
+       b.ChangeDutyCycle(13)
        print ('turn around')
+def fwdTo():
+       p.ChangeDutyCycle(fast)
+       q.ChangeDutyCycle(0)
+       a.ChangeDutyCycle(fast)
+       b.ChangeDutyCycle(0)
+       time.sleep(.2)
        
 def sharpRight():
        p.ChangeDutyCycle(0)
        q.ChangeDutyCycle(10)
        a.ChangeDutyCycle(25)
        b.ChangeDutyCycle(0)
-       time.sleep(.27)
+#       time.sleep(.3)
 ##       stopAll()
        print ('sharp right')
 ##       if GPIO.input(22)==1 and GPIO.input(7)==0 and GPIO.input(12)==0:
 ##           stopAll()
 
-       
+
 def followLine():
        if GPIO.input(right)==0 and GPIO.input(left)==0:
-            p.ChangeDutyCycle(fast)
-            q.ChangeDutyCycle(0)
-            a.ChangeDutyCycle(fast)
-            b.ChangeDutyCycle(0)
+              p.ChangeDutyCycle(fast)
+              q.ChangeDutyCycle(0)
+              a.ChangeDutyCycle(fast)
+              b.ChangeDutyCycle(0)
 
        elif GPIO.input(right)==1:
-            p.ChangeDutyCycle(0)
-            q.ChangeDutyCycle(slow)
-            a.ChangeDutyCycle(slow)
-            b.ChangeDutyCycle(0)
+              p.ChangeDutyCycle(0)
+              q.ChangeDutyCycle(slow)
+              a.ChangeDutyCycle(slow)
+              b.ChangeDutyCycle(0)
 
        elif GPIO.input(left)==1:
-            p.ChangeDutyCycle(slow)
-            q.ChangeDutyCycle(0)
-            a.ChangeDutyCycle(0)
-            b.ChangeDutyCycle(slow)
-
-
-
+              p.ChangeDutyCycle(slow)
+              q.ChangeDutyCycle(0)
+              a.ChangeDutyCycle(0)
+              b.ChangeDutyCycle(slow)
 
 def fwd():
        p.ChangeDutyCycle(fast)
        q.ChangeDutyCycle(0)
        a.ChangeDutyCycle(fast)
        b.ChangeDutyCycle(0)
-#       time.sleep(.05)
-       
-       
+       #time.sleep(.3)
+
+
 try:
        while True:
 #                  if GPIO.input(12)==1 and GPIO.input(13)==1 or globalstop==1:
-             
-              if GPIO.input(farright)==0 and GPIO.input(farleft)==0:
-                     if GPIO.input(middle)==1:
-                     #follow a straight line
-                            followLine()
-              
-                     elif GPIO.input(right)==0 and GPIO.input(left)==0 and GPIO.input(middle)==0:
-                     #turn around
-                            turnAround()
 
-	      elif GPIO.input(farright)==1 and GPIO.input(right)==1:
-                     #turn right
-                     sharpRight()
-                            
-              elif GPIO.input(farleft)==1 and GPIO.input(farright)==0:
-                     fwd()
-                     print('fwd')
-	      
-              
-              elif (GPIO.input(right)==1 and GPIO.input(middle)==1) or (GPIO.input(left)==1 and GPIO.input(middle)==1):
+              if GPIO.input(farright)==0 and GPIO.input(farleft)==0 and GPIO.input(middle):
+               #follow a straight line
                      followLine()
+
+              #elif GPIO.input(right)==1 and GPIO.input(middle)==1:
+              #       followLine()
                      
+              elif GPIO.input(farright)==1:
+              #turn right
+                     sharpRight()
+              
+              elif GPIO.input(right)==0 and GPIO.input(left)==0 and GPIO.input(middle)==0 and GPIO.input(farright)==0 and GPIO.input(farleft)==0:
+                     turnAround()
+
+              
+              elif GPIO.input(left)==1 and GPIO.input(middle)==1:
+                     #while GPIO.input(farright)==0 and GPIO.input(farleft)==1:
+                     if GPIO.input(right)==1:
+                            sharpRight()
+                     else:
+                            fwd()
+                            print('fwd')
+
+     
+                            
              
+
+       
+
              
-                                  
-                     
 
 
-
-                     
 except KeyboardInterrupt:
        finished = True  # stop other loops
        GPIO.cleanup()
